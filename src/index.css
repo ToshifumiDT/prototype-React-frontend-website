@@ -1,4 +1,5 @@
 :root {
+<<<<<<< Updated upstream
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -20,10 +21,20 @@ a {
 }
 a:hover {
   color: #535bf2;
+=======
+  --primary-bg: #f5f5f5;
+  --secondary-bg: #e0e0e0;
+  --card-bg: #d3d3d3;
+  --text-color: #333;
+  --link-color: #0000ff;
+  --button-bg: #ffd699;
+  --button-hover: #ffc266;
+>>>>>>> Stashed changes
 }
 
 body {
   margin: 0;
+<<<<<<< Updated upstream
   display: flex;
   place-items: center;
   min-width: 320px;
@@ -65,4 +76,15 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+=======
+  padding: 0;
+  background-color: var(--primary-bg);
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+>>>>>>> Stashed changes
 }

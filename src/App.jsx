@@ -1,7 +1,15 @@
+<<<<<<< Updated upstream
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+=======
+import Header from "./components/Header";
+import CompanyList from "./components/CompanyList";
+import JobList from "./components/JobList";
+import Filters from "./components/Filters";
+import Sort from "./components/Sort";
+>>>>>>> Stashed changes
 
 function App() {
   const [count, setCount] = useState(0)
