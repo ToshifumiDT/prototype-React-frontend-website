@@ -1,4 +1,7 @@
-import FavoriteButton from "./FavoriteButton";
+// import React from "react";
+import FavoriteButton from "../components/FavoriteButton";
+import "../styles/Buttons.css";
+import "../styles/CompanyList.css";
 
 function CompanyList() {
   return (

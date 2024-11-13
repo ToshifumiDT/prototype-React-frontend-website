@@ -1,10 +1,9 @@
+// import React from 'react';
+import "../styles/Header.css";
+
 function Header() {
   return (
-    <header className="Header">
-      <figure>
-        <img src="" alt="" />
-      </figure>
-
+    <header>
       <h1>Title here</h1>
     </header>
   );

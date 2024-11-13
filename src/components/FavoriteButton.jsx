@@ -1,7 +1,7 @@
+import React, { useState } from "react";
 import "../styles/Buttons.css";
-import { useState } from "react";
 
-function FavoriteButton({ onFavorite = () => {} }) {
+function FavoriteButton({ onFavorite }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
   const toggleFavorite = () => {
