@@ -1,4 +1,7 @@
-const BASE_URL = '/api';// Base URL for API
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? 'https://prototype-react-frontend-website.vercel.app/api' // For Vercel
+  : '/api'; // For local environment
+
 const HEADERS = {
   'Content-Type': 'application/json',
 };
@@ -6,13 +9,19 @@ const HEADERS = {
 // Fetch companies along with related job postings
 export const fetchCompaniesWithJobs = async () => {
   try {
+    
     const response = await fetch(
-      `${BASE_URL}/BrregApiData/read?include={"webCrawlerData":true}&where={"webCrawlerData":{"isNot":null}}`,
+      `${BASE_URL}/BrregApiData/read?include=${encodeURIComponent(
+        JSON.stringify({ webCrawlerData: true })
+      )}&where=${encodeURIComponent(
+        JSON.stringify({ webCrawlerData: { isNot: null } })
+      )}`,
       {
         method: 'GET',
         headers: HEADERS,
       }
     );
+    
     if (!response.ok) throw new Error(`Failed to fetch companies: ${response.status}`);
     const result = await response.json();
     if (!result.success) throw new Error(`API Error: ${result.error}`);
