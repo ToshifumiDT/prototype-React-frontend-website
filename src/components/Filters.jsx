@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import SearchButton from './SearchButton';
 
 function Filters({ onApplyFilters, municipalities }) {
-  const [municipality, setMunicipality] = useState('');
-  const [industry, setIndustry] = useState('');
-  const [tech, setTech] = useState('');
+   // State to manage filter conditions
+  const [municipality, setMunicipality] = useState('');// Selected municipality
+  const [industry, setIndustry] = useState('');// Selected industry
+  const [tech, setTech] = useState('');// Selected tech stack
 
+
+   // Apply filters when the search button is clicked
   const handleSearch = () => {
     if (!municipality) {
-      alert('Please select a municipality before searching.');
+      alert('Please select a municipality before searching.');// Alert when municipality is not selected
       return;
     }
-    onApplyFilters({ municipality, industry, tech });
+    onApplyFilters({ municipality, industry, tech });// Send filter criteria to parent component
   };
 
   return (
@@ -41,8 +44,6 @@ function Filters({ onApplyFilters, municipalities }) {
           <option value="">Select Industry</option>
           <option value="IT">IT</option>
           <option value="Healthcare">Healthcare</option>
-          <option value="Finance">Finance</option>
-          <option value="Education">Education</option>
         </select>
       </label>
       <label>
@@ -55,8 +56,6 @@ function Filters({ onApplyFilters, municipalities }) {
           <option value="">Select Tech</option>
           <option value="React">React</option>
           <option value="Node.js">Node.js</option>
-          <option value="Python">Python</option>
-          <option value="Java">Java</option>
         </select>
       </label>
       <SearchButton onSearch={handleSearch} />
@@ -65,4 +64,3 @@ function Filters({ onApplyFilters, municipalities }) {
 }
 
 export default Filters;
-
