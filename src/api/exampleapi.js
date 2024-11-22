@@ -1,7 +1,9 @@
-const BASE_URL = process.env.NODE_ENV === 'production'
-  ? 'https://prototype-react-frontend-website.vercel.app/api' // For Vercel
-  : '/api'; // For local environment
+// Dynamically set BASE_URL depending on the environment
+const BASE_URL = import.meta.env.MODE === 'production'
+  ? import.meta.env.VITE_BASE_URL // Use environment variable for production
+  : '/api'; // Use local endpoint for development
 
+// Default headers for API requests
 const HEADERS = {
   'Content-Type': 'application/json',
 };
@@ -9,7 +11,6 @@ const HEADERS = {
 // Fetch companies along with related job postings
 export const fetchCompaniesWithJobs = async () => {
   try {
-    
     const response = await fetch(
       `${BASE_URL}/BrregApiData/read?include=${encodeURIComponent(
         JSON.stringify({ webCrawlerData: true })
@@ -21,14 +22,13 @@ export const fetchCompaniesWithJobs = async () => {
         headers: HEADERS,
       }
     );
-    
     if (!response.ok) throw new Error(`Failed to fetch companies: ${response.status}`);
     const result = await response.json();
     if (!result.success) throw new Error(`API Error: ${result.error}`);
     return result.data; // Return fetched data
   } catch (error) {
-    console.error('Error fetching companies:', error);
-    return [];// Return an empty array on error
+    console.error('Error fetching companies:', error.message || error);
+    return []; // Return an empty array on error
   }
 };
 
@@ -42,10 +42,10 @@ export const fetchJobs = async () => {
     if (!response.ok) throw new Error(`Failed to fetch jobs: ${response.status}`);
     const result = await response.json();
     if (!result.success) throw new Error(`API Error: ${result.error}`);
-    return result.data;// Return fetched data
+    return result.data; // Return fetched data
   } catch (error) {
-    console.error('Error fetching jobs:', error);
-    return [];// Return an empty array on error
+    console.error('Error fetching jobs:', error.message || error);
+    return []; // Return an empty array on error
   }
 };
 
@@ -56,9 +56,9 @@ export const fetchMunicipalities = async () => {
     const municipalities = Array.from(
       new Set(companies.map((company) => company.kommune))
     ).map((name, index) => ({ id: index + 1, name }));
-    return municipalities;// Return municipalities
+    return municipalities; // Return unique municipalities
   } catch (error) {
-    console.error('Error fetching municipalities:', error);
-    return [];// Return an empty array on error
+    console.error('Error fetching municipalities:', error.message || error);
+    return []; // Return an empty array on error
   }
 };
