@@ -4,22 +4,25 @@ import CompanyList from './components/CompanyList';
 import JobList from './components/JobList';
 import Filters from './components/Filters';
 import Sort from './components/Sort';
-import { fetchCompanies, fetchJobs, fetchMunicipalities } from './api/exampleapi'; // Import Mock API
+import { fetchCompaniesWithJobs, fetchJobs, fetchMunicipalities } from './api/exampleapi';
 
 function App() {
-  const [municipalities, setMunicipalities] = useState([]); // municipalities
-  const [companies, setCompanies] = useState([]); // companies
-  const [jobs, setJobs] = useState([]); // jobs
-  const [filteredCompanies, setFilteredCompanies] = useState([]); // filteredCompanies
-  const [filteredJobs, setFilteredJobs] = useState([]); // filteredJobs
-  const [sortOption, setSortOption] = useState(''); // sortOption
+  // State management for various data
+  const [municipalities, setMunicipalities] = useState([]);//municipalities
+  const [companies, setCompanies] = useState([]);//companies
+  const [jobs, setJobs] = useState([]); //jobs
+  const [filteredCompanies, setFilteredCompanies] = useState([]);//filteredCompanies
+  const [filteredJobs, setFilteredJobs] = useState([]); //filteredJobs
+  const [sortOption, setSortOption] = useState('');//selected sorting option
 
-  // Obtain initial data
+
+   // Fetch data on initial rendering
   useEffect(() => {
     const loadData = async () => {
       try {
+        // Fetch data from APIs
         const municipalitiesData = await fetchMunicipalities();
-        const companyData = await fetchCompanies();
+        const companyData = await fetchCompaniesWithJobs();
         const jobData = await fetchJobs();
 
         // Set data to state
@@ -42,21 +45,24 @@ function App() {
   const handleFilters = (filters) => {
     const { municipality, industry, tech } = filters;
 
+    // Filter company data based on the criteria
     const filteredCompanies = companies.filter((company) => {
       return (
-        (!municipality || company.location.includes(municipality)) &&
-        (!industry || company.industry.includes(industry))
+        (!municipality || company.kommune === municipality) &&
+        (!industry || company.industri.includes(industry))
       );
     });
 
+     // Filter job data based on the criteria
     const filteredJobs = jobs.filter((job) => {
       return (
-        (!municipality || job.location.includes(municipality)) &&
+        (!municipality || job.location === municipality) &&
         (!industry || job.industry.includes(industry)) &&
         (!tech || job.skills.includes(tech))
       );
     });
 
+    // Update state with filtered data
     setFilteredCompanies(filteredCompanies);
     setFilteredJobs(filteredJobs);
   };
@@ -69,25 +75,26 @@ function App() {
       case 'nameDesc':
         return [...data].sort((a, b) => (b.name || b.title).localeCompare(a.name || a.title));
       case 'dateAsc':
-        return [...data].sort((a, b) => new Date(a.dateAdded || a.deadline) - new Date(b.dateAdded || b.deadline));
+        return [...data].sort((a, b) => new Date(a.createdAt || a.deadline) - new Date(b.createdAt || b.deadline));
       case 'dateDesc':
-        return [...data].sort((a, b) => new Date(b.dateAdded || b.deadline) - new Date(a.dateAdded || a.deadline));
+        return [...data].sort((a, b) => new Date(b.createdAt || b.deadline) - new Date(a.createdAt || a.deadline));
       default:
-        return data;
+        return data; // Default
     }
   };
 
+  // Handle changes to sorting options
   const handleSortChange = (option) => {
     setSortOption(option);
   };
 
+    // Get sorted data
   const sortedCompanies = sortData(filteredCompanies, sortOption);
   const sortedJobs = sortData(filteredJobs, sortOption);
 
   return (
     <div>
       <Header />
-      {/* Pass municipal data to the filter component */}
       <Filters onApplyFilters={handleFilters} municipalities={municipalities} />
       <Sort onSortChange={handleSortChange} />
       <CompanyList companies={sortedCompanies} />

@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 
 // Sort component
 function Sort({ onSortChange }) {
-  const [sortOption, setSortOption] = useState('');
+  const [sortOption, setSortOption] = useState(''); // Currently selected sorting option
 
   // Handle changes to sorting options
   const handleSortChange = (e) => {
     const selectedOption = e.target.value;
-    setSortOption(selectedOption);
-    onSortChange(selectedOption);
+    setSortOption(selectedOption);// Update state
+    onSortChange(selectedOption);// Notify parent component
   };
 
   return (

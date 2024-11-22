@@ -1,58 +1,55 @@
-// Get Mock's company information
-
-export const fetchCompanies = async () => {
-  return [
-    {
-      id: 1,
-      name: 'Tech Corp',
-      location: 'Oslo',
-      contact: 'contact@techcorp.com',
-      industry: 'IT',
-      description: 'Tech Corp specializes in software solutions.',
-    },
-    {
-      id: 2,
-      name: 'Health Inc',
-      location: 'Bergen',
-      contact: 'info@healthinc.com',
-      industry: 'Healthcare',
-      description: 'Health Inc provides innovative healthcare products.',
-    },
-  ];
+const BASE_URL = '/api';// Base URL for API
+const HEADERS = {
+  'Content-Type': 'application/json',
 };
 
-// Get Mock Jobs
+// Fetch companies along with related job postings
+export const fetchCompaniesWithJobs = async () => {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/BrregApiData/read?include={"webCrawlerData":true}&where={"webCrawlerData":{"isNot":null}}`,
+      {
+        method: 'GET',
+        headers: HEADERS,
+      }
+    );
+    if (!response.ok) throw new Error(`Failed to fetch companies: ${response.status}`);
+    const result = await response.json();
+    if (!result.success) throw new Error(`API Error: ${result.error}`);
+    return result.data; // Return fetched data
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    return [];// Return an empty array on error
+  }
+};
 
+// Fetch all job data
 export const fetchJobs = async () => {
-  return [
-    {
-      id: 1,
-      title: 'Software Engineer',
-      skills: ['React', 'Node.js'],
-      type: 'Full-time',
-      description: 'Develop and maintain software applications.',
-      deadline: '2024-12-01',
-      link: 'https://example.com/job/1',
-    },
-    {
-      id: 2,
-      title: 'Data Scientist',
-      skills: ['Python', 'SQL'],
-      type: 'Contract',
-      description: 'Analyze data and build predictive models.',
-      deadline: '2024-11-15',
-      link: 'https://example.com/job/2',
-    },
-  ];
+  try {
+    const response = await fetch(`${BASE_URL}/WebCrawlerData/read`, {
+      method: 'GET',
+      headers: HEADERS,
+    });
+    if (!response.ok) throw new Error(`Failed to fetch jobs: ${response.status}`);
+    const result = await response.json();
+    if (!result.success) throw new Error(`API Error: ${result.error}`);
+    return result.data;// Return fetched data
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    return [];// Return an empty array on error
+  }
 };
 
-// Get Mock Municipality Data
-
+// Fetch municipalities from company data
 export const fetchMunicipalities = async () => {
-  return [
-    { id: 1, name: 'Oslo' },
-    { id: 2, name: 'Bergen' },
-    { id: 3, name: 'Trondheim' },
-    { id: 4, name: 'Stavanger' },
-  ];
+  try {
+    const companies = await fetchCompaniesWithJobs();
+    const municipalities = Array.from(
+      new Set(companies.map((company) => company.kommune))
+    ).map((name, index) => ({ id: index + 1, name }));
+    return municipalities;// Return municipalities
+  } catch (error) {
+    console.error('Error fetching municipalities:', error);
+    return [];// Return an empty array on error
+  }
 };
